@@ -47,27 +47,23 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </p>
           
           <div className="flex gap-3 w-full">
-            <Link 
+            <a 
               href={signInUrl}
               target="_blank" 
-      rel="noopener noreferrer"
+              className="py-2 px-4 border border-blue-600 rounded-lg flex-1 text-blue-600 hover:bg-blue-50 flex items-center justify-center"
             >
-              <span className="py-2 px-4 border border-blue-600 rounded-lg flex-1 text-blue-600 hover:bg-blue-50 flex items-center justify-center">
                 <LogIn size={16} className="mr-2" />
                 Sign In
-              </span>
-            </Link>
-            <Link 
+
+            </a>
+            <a 
               href={signUpUrl}
               target="_blank" 
-      rel="noopener noreferrer"
+              className="py-2 px-4 bg-blue-600 text-white rounded-lg flex-1 hover:bg-blue-700 flex items-center justify-center"
               >
-              <span className="py-2 px-4 bg-blue-600 text-white rounded-lg flex-1 hover:bg-blue-700 flex items-center justify-center"
->
                 <UserPlus size={16} className="mr-2" />
                   Sign Up
-              </span>       
-            </Link>
+            </a>
           </div>
         </div>
       </div>
