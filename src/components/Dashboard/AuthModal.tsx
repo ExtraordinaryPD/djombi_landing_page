@@ -1,5 +1,7 @@
 import React from 'react';
 import { X, LogIn, UserPlus } from 'lucide-react';
+import Link from 'next/link'
+
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -45,20 +47,27 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </p>
           
           <div className="flex gap-3 w-full">
-            <a 
+            <Link 
               href={signInUrl}
-              className="py-2 px-4 border border-blue-600 rounded-lg flex-1 text-blue-600 hover:bg-blue-50 flex items-center justify-center"
+              target="_blank" 
+      rel="noopener noreferrer"
             >
-              <LogIn size={16} className="mr-2" />
-              Sign In
-            </a>
-            <a 
+              <span className="py-2 px-4 border border-blue-600 rounded-lg flex-1 text-blue-600 hover:bg-blue-50 flex items-center justify-center">
+                <LogIn size={16} className="mr-2" />
+                Sign In
+              </span>
+            </Link>
+            <Link 
               href={signUpUrl}
-              className="py-2 px-4 bg-blue-600 text-white rounded-lg flex-1 hover:bg-blue-700 flex items-center justify-center"
-            >
-              <UserPlus size={16} className="mr-2" />
-              Sign Up
-            </a>
+              target="_blank" 
+      rel="noopener noreferrer"
+              >
+              <span className="py-2 px-4 bg-blue-600 text-white rounded-lg flex-1 hover:bg-blue-700 flex items-center justify-center"
+>
+                <UserPlus size={16} className="mr-2" />
+                  Sign Up
+              </span>       
+            </Link>
           </div>
         </div>
       </div>
