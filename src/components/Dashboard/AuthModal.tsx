@@ -11,8 +11,8 @@ interface AuthModalProps {
 export const AuthModal: React.FC<AuthModalProps> = ({ 
   isOpen, 
   onClose,
-  signInUrl = "/auth/signin",
-  signUpUrl = "/auth/signup"
+  signInUrl = "https://djombi.tech/auth/login",
+  signUpUrl = "https://djombi.tech/auth/signup"
 }) => {
   if (!isOpen) return null;
 
