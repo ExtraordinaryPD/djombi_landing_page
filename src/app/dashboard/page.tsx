@@ -262,8 +262,8 @@ const Dashboard: React.FC = () => {
       <AuthModal 
         isOpen={modalOpen} 
         onClose={() => setModalOpen(false)} 
-        signInUrl="https://djombi.tech/login"
-        signUpUrl="https://djombi.tech/signup"
+        signInUrl="https://djombi.tech/auth/login"
+        signUpUrl="https://djombi.tech/auth/signup"
       />
     </div>
   );
