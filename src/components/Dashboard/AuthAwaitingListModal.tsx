@@ -9,13 +9,15 @@ interface AuthModalProps {
     signUpUrl?: string;
 }
 
-export const AwaitingListModal: React.FC<AuthModalProps> = ({
+export const AuthAwaitingListModal: React.FC<AuthModalProps> = ({
     isOpen,
     onClose,
-    
 }) => {
-    if (!isOpen) return null;
+    // Move useState hook before any conditional returns
     const [awaitingListModalOpen, setAwaitingListModalOpen] = useState<boolean>(false);
+    
+    // Return null after the hook declaration
+    if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
