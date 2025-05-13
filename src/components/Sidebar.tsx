@@ -41,25 +41,25 @@ const navItems: NavItem[] = [
     id: "dashboard",
     label: "Dashboard",
     icon: "/icons/dashboardnew.png",
-    href: "/dashboard"
+    href: "/dashboard/awaitinglist"
   },
   {
     id: "marketing",
     label: "Marketing",
     icon: "/icons/marketingnew.png",
-    href: "/dashboard",
+    href: "/dashboard/awaitinglist",
   },
   {
     id: "advertising",
     label: "Advertising",
     icon: "/icons/advertisingnew.png",
-    href: "/dashboard",
+    href: "/dashboard/awaitinglist",
   },
   {
     id: "tools",
     label: "Tools",
     icon: "/icons/toolsnew.png",
-    href: "/dashboard",
+    href: "/dashboard/awaitinglist",
   }
 ];
 
