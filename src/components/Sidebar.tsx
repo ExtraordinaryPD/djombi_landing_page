@@ -68,19 +68,19 @@ const externalItems: NavItem[] = [
     id: "whatsapp",
     label: "Whatsapp",
     icon: "/icons/whatsapp.png",
-    href: "/dashboard"
+    href: "/dashboard/awaitinglist"
   },
   {
     id: "chatgpt",
     label: "ChatGPT",
     icon: "/icons/chatgpt.png",
-    href: "/dashboard"
+    href: "/dashboard/awaitinglist"
   },
   {
     id: "telegram",
     label: "Telegram",
     icon: "/icons/telegram.png",
-    href: "/dashboard"
+    href: "/dashboard/awaitinglist"
   }
 ];
 
