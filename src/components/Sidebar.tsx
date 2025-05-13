@@ -7,6 +7,7 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { getUserInfo as getServerUserInfo } from "@/lib/utils/cookies";
 import { AuthModal } from "./Dashboard/AuthModal";
+import { AwaitingListModal } from "./UserTestSidebar/AwaitingListModal";
 
 // Define proper TypeScript interfaces
 interface NavItem {
@@ -242,6 +243,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   const [userInfo, setUserInfo] = useState<UserInfo>({ name: "" });
   const [showDropdown, setShowDropdown] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [signInUrl, setSignInUrl] = useState<string>("/auth/signin");
@@ -355,7 +357,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   // Handle unlock button click
   const handleUnlockClick = () => {
-    setAuthModalOpen(true);
+    setModalOpen(true);
   };
 
   // Generate initials for user's icon
@@ -564,11 +566,17 @@ const Sidebar: React.FC<SidebarProps> = ({
       />
 
       {/* Authentication Modal */}
-      <AuthModal
+      {/* <AuthModal
         isOpen={authModalOpen}
         onClose={() => setAuthModalOpen(false)}
         signInUrl={signInUrl}
         signUpUrl={signUpUrl}
+      /> */}
+
+      {/* Awaiting List Modal on Features */}
+      <AwaitingListModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
       />
     </div>
   );
