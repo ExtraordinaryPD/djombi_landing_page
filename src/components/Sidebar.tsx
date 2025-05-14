@@ -103,7 +103,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
       <Link href={item.href} passHref>
         <div
           className={cn(
-            "flex items-center py-3 px-4 my-2 rounded-lg cursor-pointer", // Increased padding for larger touch target
+            "flex items-center py-2 px-3 my-1 rounded-lg cursor-pointer", // Reduced vertical padding and margin
             isActive ? "bg-blue-50 text-blue-600" : "hover:bg-gray-50",
             isCollapsed && "justify-center" // Center items when collapsed
           )}
@@ -111,17 +111,17 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
         >
           <div className={cn(
             "flex items-center justify-center",
-            isCollapsed ? "w-7 h-7" : "w-6 h-6 mr-3" // Larger icons
+            isCollapsed ? "w-6 h-6" : "w-5 h-5 mr-2" // Slightly smaller icons
           )}>
             <Image
               src={item.icon}
-              width={isCollapsed ? 28 : 24}
-              height={isCollapsed ? 28 : 24}
+              width={isCollapsed ? 24 : 20}
+              height={isCollapsed ? 24 : 20}
               alt={item.label}
               className={isCollapsed ? "font-bold" : ""} // Make icons bolder when collapsed
             />
           </div>
-          {!isCollapsed && <span className="font-medium text-base">{item.label}</span>} {/* Increased font size */}
+          {!isCollapsed && <span className="font-medium text-sm">{item.label}</span>} {/* Smaller font size */}
         </div>
       </Link>
     </div>
@@ -160,14 +160,14 @@ const WorkspaceModal: React.FC<WorkspaceModalProps> = ({ isOpen, onClose, onSubm
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-md">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold">Sign into workspace</h2>
+          <h2 className="text-xl font-bold">Sign into workspace</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
-            <X size={24} />
+            <X size={20} />
           </button>
         </div>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="organizationId" className="block text-base font-medium text-gray-700 mb-2">
+            <label htmlFor="organizationId" className="block text-sm font-medium text-gray-700 mb-1">
               Organization ID
             </label>
             <input
@@ -175,13 +175,13 @@ const WorkspaceModal: React.FC<WorkspaceModalProps> = ({ isOpen, onClose, onSubm
               name="organizationId"
               type="text"
               required
-              className="w-full px-4 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={formData.organizationId}
               onChange={handleChange}
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="email" className="block text-base font-medium text-gray-700 mb-2">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
               Email
             </label>
             <input
@@ -189,13 +189,13 @@ const WorkspaceModal: React.FC<WorkspaceModalProps> = ({ isOpen, onClose, onSubm
               name="email"
               type="email"
               required
-              className="w-full px-4 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={formData.email}
               onChange={handleChange}
             />
           </div>
           <div className="mb-6">
-            <label htmlFor="password" className="block text-base font-medium text-gray-700 mb-2">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
               Password
             </label>
             <input
@@ -203,14 +203,14 @@ const WorkspaceModal: React.FC<WorkspaceModalProps> = ({ isOpen, onClose, onSubm
               name="password"
               type="password"
               required
-              className="w-full px-4 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={formData.password}
               onChange={handleChange}
             />
           </div>
           <button
             type="submit"
-            className="w-full py-3 text-base bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700"
+            className="w-full py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700"
           >
             Sign In
           </button>
@@ -368,27 +368,27 @@ const Sidebar: React.FC<SidebarProps> = ({
       <div
         className={cn(
           "flex flex-col h-screen bg-white border-r transition-all duration-300 top-0 left-0 fixed",
-          isCollapsed ? "w-20" : "w-64" // Maintain original width from first code
+          isCollapsed ? "w-20" : "w-64"
         )}
-        style={{ fontSize: '16px' }} /* Increased base font size for the sidebar */
+        style={{ fontSize: '14px' }} /* Base font size for the sidebar */
       >
         {/* Logo */}
-        <div className="p-3 flex items-center justify-center"> {/* Increased padding */}
-          <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center"> {/* Larger logo */}
+        <div className="p-2 flex items-center justify-center"> {/* Reduced padding */}
+          <div className="w-7 h-7 bg-emerald-600 rounded-lg flex items-center justify-center"> {/* Smaller logo */}
             <Image
               src="/icons/icon-main.png"
-              width={36}
-              height={36}
+              width={32}
+              height={32}
               alt="icon"
             />
           </div>
           {!isCollapsed && (
             <Image
               src="/icons/djombi-icon.png"
-              width={130}
-              height={36}
+              width={120}
+              height={32}
               alt="icon"
-              className="ml-3" /* Added margin for spacing */
+              className="ml-2" /* Added margin for spacing */
             />
           )}
         </div>
@@ -397,46 +397,46 @@ const Sidebar: React.FC<SidebarProps> = ({
         <div className="flex justify-center">
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="p-3 hover:bg-gray-100 rounded-lg items-center" /* Increased padding */
+            className="p-2 hover:bg-gray-100 rounded-lg items-center" /* Reduced padding */
           >
-            <Menu className="h-5 w-5" /> {/* Larger icon */}
+            <Menu className="h-4 w-4" /> {/* Smaller icon */}
           </button>
         </div>
 
         {/* Company selector with dropdown */}
-        <div className="px-4 py-3 relative" ref={dropdownRef}> {/* Increased padding */}
+        <div className="px-3 py-2 relative" ref={dropdownRef}> {/* Reduced padding */}
           <div
             className={cn(
-              "flex items-center p-2 border rounded-lg cursor-pointer hover:bg-gray-50", /* Increased padding */
+              "flex items-center p-1 border rounded-lg cursor-pointer hover:bg-gray-50", /* Reduced padding */
               isCollapsed ? "justify-center" : "justify-between"
             )}
             onClick={toggleDropdown}
           >
             <div className="flex items-center">
-              <div className="w-7 h-7 bg-blue-600 rounded flex items-center justify-center text-white text-sm font-bold"> {/* Larger user icon */}
+              <div className="w-5 h-5 bg-blue-600 rounded flex items-center justify-center text-white text-xs font-bold"> {/* Smaller user icon */}
                 {userInitials}
               </div>
-              {!isCollapsed && <span className="font-medium text-base ml-3">{userInfo.name}</span>} {/* Added margin, larger text */}
+              {!isCollapsed && <span className="font-medium text-sm ml-2">{userInfo.name}</span>} {/* Added margin, smaller text */}
             </div>
             {!isCollapsed && (
-              <ChevronDown size={16} /> /* Larger icon */
+              <ChevronDown size={14} /> /* Smaller icon */
             )}
           </div>
 
           {/* Workspace Dropdown */}
           {showDropdown && !isCollapsed && (
-            <div className="absolute left-4 right-4 mt-2 bg-white border rounded-lg shadow-lg z-10"> {/* Adjusted margins */}
-              <div className="p-3">
-                <p className="text-sm uppercase text-gray-400 pb-2">Workspaces</p> {/* Increased text size and padding */}
+            <div className="absolute left-3 right-3 mt-1 bg-white border rounded-lg shadow-lg z-10"> {/* Adjusted margins */}
+              <div className="p-2">
+                <p className="text-xs uppercase text-gray-400 pb-1">Workspaces</p> {/* Reduced padding */}
 
                 {/* Current workspace */}
-                <div className="flex items-center p-2 bg-blue-50 rounded-md mb-2"> {/* Increased padding */}
-                  <div className="w-8 h-8 bg-blue-600 rounded-md flex items-center justify-center text-white font-medium mr-3 text-sm"> {/* Larger, added text size */}
+                <div className="flex items-center p-1 bg-blue-50 rounded-md mb-1"> {/* Reduced padding */}
+                  <div className="w-6 h-6 bg-blue-600 rounded-md flex items-center justify-center text-white font-medium mr-2 text-xs"> {/* Smaller, added text size */}
                     {userInitials}
                   </div>
                   <div>
-                    <p className="font-medium text-base">{userInfo.name}</p> {/* Larger text */}
-                    <p className="text-sm text-gray-500">Current workspace</p> {/* Increased text size */}
+                    <p className="font-medium text-sm">{userInfo.name}</p> {/* Smaller text */}
+                    <p className="text-xs text-gray-500">Current workspace</p>
                   </div>
                 </div>
 
@@ -444,21 +444,21 @@ const Sidebar: React.FC<SidebarProps> = ({
                 {workspaces.filter(w => w.id !== userInfo.organizationId).map((workspace) => (
                   <div
                     key={workspace.id}
-                    className="flex items-center p-2 hover:bg-gray-50 rounded-md cursor-pointer" /* Increased padding */
+                    className="flex items-center p-1 hover:bg-gray-50 rounded-md cursor-pointer" /* Reduced padding */
                     onClick={() => handleWorkspaceClick(workspace)}
                   >
-                    <div className="w-8 h-8 bg-gray-600 rounded-md flex items-center justify-center text-white font-medium mr-3 text-sm"> {/* Larger, added text size */}
+                    <div className="w-6 h-6 bg-gray-600 rounded-md flex items-center justify-center text-white font-medium mr-2 text-xs"> {/* Smaller, added text size */}
                       {workspace.icon}
                     </div>
                     <div>
-                      <p className="font-medium text-base">{workspace.name}</p> {/* Larger text */}
+                      <p className="font-medium text-sm">{workspace.name}</p> {/* Smaller text */}
                     </div>
                   </div>
                 ))}
 
                 {/* Add workspace button */}
                 <button
-                  className="w-full mt-2 p-2 bg-gray-100 hover:bg-gray-200 rounded-md text-sm font-medium flex items-center justify-center" /* Increased margins, padding, text size */
+                  className="w-full mt-1 p-1 bg-gray-100 hover:bg-gray-200 rounded-md text-xs font-medium flex items-center justify-center" /* Reduced margins, padding, text size */
                   onClick={() => {
                     setShowDropdown(false);
                     setShowModal(true);
@@ -472,7 +472,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Main Navigation */}
-        <div className="flex-1 overflow-y-auto px-4 max-h-[calc(100vh-260px)]"> {/* Adjusted padding and max height to avoid scrolling */}
+        <div className="flex-1 overflow-y-auto px-3 max-h-[calc(100vh-230px)]"> {/* Adjusted padding and max height */}
           {/* Dashboard Item (Placed first as requested) */}
           <SidebarItem
             key={navItems[0].id}
@@ -484,13 +484,13 @@ const Sidebar: React.FC<SidebarProps> = ({
 
           {/* Features section */}
           {!isCollapsed && (
-            <div className="text-sm uppercase text-gray-400 mt-3 mb-2 px-2"> {/* Increased text size and margins */}
+            <div className="text-xs uppercase text-gray-400 mt-2 mb-1 px-2"> {/* Reduced margins */}
               FEATURES
             </div>
           )}
 
           {/* Other Menu Items (marketing, advertising, tools) */}
-          <div className="mb-4"> {/* Increased margin */}
+          <div className="mb-3"> {/* Reduced margin */}
             {navItems.slice(1).map((item) => (
               <SidebarItem
                 key={item.id}
@@ -504,12 +504,12 @@ const Sidebar: React.FC<SidebarProps> = ({
 
           {/* Externals Section */}
           {!isCollapsed && (
-            <div className="text-sm uppercase text-gray-400 mt-3 mb-2 px-2"> {/* Increased text size and margins */}
+            <div className="text-xs uppercase text-gray-400 mt-2 mb-1 px-2"> {/* Reduced margins */}
               EXTERNALS
             </div>
           )}
 
-          <div className="mb-4"> {/* Increased margin */}
+          <div className="mb-3"> {/* Reduced margin */}
             {externalItems.map((item) => (
               <SidebarItem
                 key={item.id}
@@ -523,12 +523,12 @@ const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Upgrade Banner - Fixed to bottom */}
-        <div className="mx-4 mb-4 bg-gradient-to-b from-blue-400 to-blue-600 rounded-lg text-white p-4"> {/* Increased margins and padding */}
-          <div className="flex justify-center mb-3"> {/* Increased margin */}
-            <div className="bg-white/20 rounded-full p-2"> {/* Increased padding */}
+        <div className="mx-3 mb-3 bg-gradient-to-b from-blue-400 to-blue-600 rounded-lg text-white p-3"> {/* Reduced margins and padding */}
+          <div className="flex justify-center mb-2"> {/* Reduced margin */}
+            <div className="bg-white/20 rounded-full p-1"> {/* Reduced padding */}
               <svg
-                width="24"
-                height="24"  /* Larger SVG */
+                width="20"
+                height="20"  /* Smaller SVG */
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -547,10 +547,10 @@ const Sidebar: React.FC<SidebarProps> = ({
           {/* Upgrade section */}
           {!isCollapsed && (
             <>
-              <h3 className="text-center font-medium mb-2 text-base">Upgrade your potential</h3> {/* Larger text */}
-              <p className="text-sm text-center mb-3">you're now using Free plan.</p> {/* Larger text, increased margin */}
+              <h3 className="text-center font-medium mb-1 text-sm">Upgrade your potential</h3> {/* Smaller text */}
+              <p className="text-xs text-center mb-2">you're now using Free plan.</p> {/* Smaller text, reduced margin */}
               <button
-                className="w-full py-2 bg-blue-700 hover:bg-blue-800 rounded-lg font-medium text-center text-white text-sm" /* Increased padding, larger text */
+                className="w-full py-1 bg-blue-700 hover:bg-blue-800 rounded-lg font-medium text-center text-white text-xs" /* Reduced padding, smaller text */
                 onClick={handleUnlockClick}
               >
                 UNLOCK NOW !
