@@ -125,7 +125,7 @@ export default function Home() {
               </div>
             ))}
           </div>
-          <Link href="/dashboard">
+          <Link href="https://djombi.tech">
             <Button 
               className="bg-emerald-500 hover:bg-emerald-600 text-white mt-12 px-8 py-6 text-lg"
             >
