@@ -8,6 +8,7 @@ import { UnlockLevelCard } from "@/components/Dashboard/UnlockLevelCard";
 import { EmailSection } from "@/components/Dashboard/EmailSection";
 import { StatisticsSection } from "@/components/Dashboard/StatisticsSection";
 import { AuthModal } from "@/components/Dashboard/AuthModal"; // Updated import for new modal
+import { AwaitingListModal } from "@/components/UserTestSidebar/AwaitingListModal";
 
 // Define proper TypeScript interfaces
 interface UserInfo {
@@ -47,7 +48,7 @@ const quotes = [
 // Get time-based greeting
 const getTimeBasedGreeting = (): string => {
   const hours = new Date().getHours();
-  
+
   if (hours >= 5 && hours < 12) {
     return "Good Morning";
   } else if (hours >= 12 && hours < 18) {
@@ -65,7 +66,7 @@ const getDailyQuote = (): typeof quotes[0] => {
   const diff = today.getTime() - start.getTime();
   const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
   const quoteIndex = dayOfYear % quotes.length;
-  
+
   return quotes[quoteIndex];
 };
 
@@ -87,13 +88,14 @@ const Dashboard: React.FC = () => {
   const [quote, setQuote] = useState<typeof quotes[0]>(quotes[0]);
   const [signInUrl, setSignInUrl] = useState<string>("/auth/signin");
   const [signUpUrl, setSignUpUrl] = useState<string>("/auth/signup");
+  const [awaitingListModalOpen, setAwaitingListModalOpen] = useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {
     // Initialize time-based greeting and daily quote
     setGreeting(getTimeBasedGreeting());
     setQuote(getDailyQuote());
-    
+
     // Try to get user info from cookies first
     try {
       const cookieInfo = getServerUserInfo();
@@ -116,7 +118,7 @@ const Dashboard: React.FC = () => {
         name: localInfo.name
       });
     }
-    
+
     // Get active category from localStorage (set by Sidebar)
     const savedCategory = localStorage.getItem('activeCategory');
     if (savedCategory) {
@@ -142,7 +144,7 @@ const Dashboard: React.FC = () => {
 
     // Check for activeCategory changes
     window.addEventListener('storage', handleStorageChange);
-    
+
     return () => {
       window.removeEventListener('storage', handleStorageChange);
     };
@@ -152,7 +154,7 @@ const Dashboard: React.FC = () => {
   const handleFeatureClick = (link: string, isActive: boolean) => {
     // Show authentication modal for all feature clicks
     setModalOpen(true);
-    
+
     // You could also set custom URLs based on the feature if needed
     // Example: set different URLs based on the feature or its active status
     setSignInUrl("/auth/signin");
@@ -182,13 +184,13 @@ const Dashboard: React.FC = () => {
 
     // Get all features for the current tab
     const currentTabFeatures = exampleData.find(tab => tab.id === activeTab)?.features || [];
-    
+
     // For dashboard, we want to show specific items from different categories
     if (activeTab === "dashboard") {
       return [
         // Find the professional email feature
-        ...exampleData.flatMap(tab => 
-          tab.features.filter(feature => 
+        ...exampleData.flatMap(tab =>
+          tab.features.filter(feature =>
             ["professional-mail", "task-manager", "google-ads"].includes(feature.id)
           )
         )
@@ -197,7 +199,7 @@ const Dashboard: React.FC = () => {
         isActive: !!alwaysActiveFeatures[feature.id as keyof typeof alwaysActiveFeatures]
       }));
     }
-    
+
     // For other tabs, show their own features with correct active states
     return currentTabFeatures.map(feature => ({
       ...feature,
@@ -207,8 +209,16 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="p-6 min-h-screen bg-white overflow-hidden overflow-y-auto">
-      {/* App Title */}
-      <h1 className="text-2xl font-bold text-gray-900 mb-4">The everything app for work !</h1>
+      {/* App Title with Join Awaiting List Button */}
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold text-gray-900">The everything app for work !</h1>
+        <button
+          onClick={() => setAwaitingListModalOpen(true)}
+          className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 text-sm sm:text-base transition-colors"
+        >
+          Join Awaiting List
+        </button>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Section (2 columns) */}
@@ -239,8 +249,8 @@ const Dashboard: React.FC = () => {
           </div>
 
           {/* Unlocked Features Section - Shows features based on selected sidebar category */}
-          <UnlockedFeatures 
-            activeTabFeatures={getActiveTabFeatures()} 
+          <UnlockedFeatures
+            activeTabFeatures={getActiveTabFeatures()}
             onFeatureClick={handleFeatureClick}
           />
 
@@ -259,11 +269,17 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Authentication Modal - Replaces the FeatureUnavailableModal */}
-      <AuthModal 
-        isOpen={modalOpen} 
-        onClose={() => setModalOpen(false)} 
-        signInUrl={signInUrl}
-        signUpUrl={signUpUrl}
+      <AuthModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        signInUrl="https://djombi.tech/auth/login"
+        signUpUrl="https://djombi.tech/auth/signup"
+      />
+
+      {/* Awaiting List Modal */}
+      <AwaitingListModal
+        isOpen={awaitingListModalOpen}
+        onClose={() => setAwaitingListModalOpen(false)}
       />
     </div>
   );
@@ -287,7 +303,7 @@ const exampleData: Tab[] = [
   },
   {
     id: "marketing",
-    label: "Marketing", 
+    label: "Marketing",
     features: [
       {
         id: "crm",
@@ -471,7 +487,7 @@ const exampleData: Tab[] = [
   },
   {
     id: "chatgpt",
-    label: "ChatGPT", 
+    label: "ChatGPT",
     features: [
       {
         id: "chatgpt-assistant",
@@ -491,7 +507,7 @@ const exampleData: Tab[] = [
         id: "telegram-messaging",
         title: "Telegram Messaging",
         subtitle: "Secure communication",
-        imageUrl: "/icons/telegram.png", 
+        imageUrl: "/icons/telegram.png",
         link: "/dashboard/telegram",
         isActive: true
       }
