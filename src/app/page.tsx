@@ -396,7 +396,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <Image
-                src="/icons/djombi-white.png"
+                src="/icons/djombi-adafri.png"
                 width={150}
                 height={40}
                 alt="Djombi"
