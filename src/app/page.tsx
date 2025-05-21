@@ -377,7 +377,7 @@ export default function Home() {
             ))}
           </div>
           
-          <Link href="/dashboard">
+          <Link href="/dashboard/awaitinglist">
             <Button 
               className="bg-emerald-500 hover:bg-emerald-600 text-white mt-12 px-8 py-6 text-lg"
             >

@@ -1,3 +1,4 @@
+// Updated Sidebar.tsx
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { Menu, ChevronDown, X } from "lucide-react";
@@ -393,16 +394,6 @@ const Sidebar: React.FC<SidebarProps> = ({
           )}
         </div>
 
-        {/* Toggle button */}
-        <div className="flex justify-center">
-          <button
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            className="p-2 hover:bg-gray-100 rounded-lg items-center" /* Reduced padding */
-          >
-            <Menu className="h-4 w-4" /> {/* Smaller icon */}
-          </button>
-        </div>
-
         {/* Company selector with dropdown */}
         <div className="px-3 py-2 relative" ref={dropdownRef}> {/* Reduced padding */}
           <div
@@ -585,6 +576,661 @@ const Sidebar: React.FC<SidebarProps> = ({
 };
 
 export default Sidebar;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// "use client";
+// import React, { useState, useEffect, useRef } from "react";
+// import { Menu, ChevronDown, X } from "lucide-react";
+// import { cn } from "@/lib/utils";
+// import Link from "next/link";
+// import Image from "next/image";
+// import { usePathname, useRouter } from "next/navigation";
+// import { getUserInfo as getServerUserInfo } from "@/lib/utils/cookies";
+// import { AuthModal } from "./Dashboard/AuthModal";
+// import { AwaitingListModal } from "./UserTestSidebar/AwaitingListModal";
+
+// // Define proper TypeScript interfaces
+// interface NavItem {
+//   id: string;
+//   label: string;
+//   icon: string;
+//   href: string;
+//   subItems?: SubItem[];
+// }
+
+// interface SubItem {
+//   id: string;
+//   label: string;
+//   href: string;
+//   icon?: string;
+// }
+
+// interface UserInfo {
+//   name: string;
+//   organizationId?: string;
+// }
+
+// interface Workspace {
+//   id: string;
+//   name: string;
+//   icon: string;
+// }
+
+// // Navigation items matching the design - reordered as requested
+// const navItems: NavItem[] = [
+//   {
+//     id: "dashboard",
+//     label: "Dashboard",
+//     icon: "/icons/dashboardnew.png",
+//     href: "/dashboard/awaitinglist"
+//   },
+//   {
+//     id: "marketing",
+//     label: "Marketing",
+//     icon: "/icons/marketingnew.png",
+//     href: "/dashboard/awaitinglist",
+//   },
+//   {
+//     id: "advertising",
+//     label: "Advertising",
+//     icon: "/icons/advertisingnew.png",
+//     href: "/dashboard/awaitinglist",
+//   },
+//   {
+//     id: "tools",
+//     label: "Tools",
+//     icon: "/icons/toolsnew.png",
+//     href: "/dashboard/awaitinglist",
+//   }
+// ];
+
+// const externalItems: NavItem[] = [
+//   {
+//     id: "whatsapp",
+//     label: "Whatsapp",
+//     icon: "/icons/whatsapp.png",
+//     href: "/dashboard/awaitinglist"
+//   },
+//   {
+//     id: "chatgpt",
+//     label: "ChatGPT",
+//     icon: "/icons/chatgpt.png",
+//     href: "/dashboard/awaitinglist"
+//   },
+//   {
+//     id: "telegram",
+//     label: "Telegram",
+//     icon: "/icons/telegram.png",
+//     href: "/dashboard/awaitinglist"
+//   }
+// ];
+
+// interface SidebarItemProps {
+//   item: NavItem;
+//   isCollapsed: boolean;
+//   isActive: boolean;
+//   onClick: () => void;
+// }
+
+// const SidebarItem: React.FC<SidebarItemProps> = ({
+//   item,
+//   isCollapsed,
+//   isActive,
+//   onClick
+// }) => {
+//   return (
+//     <div className="relative">
+//       <Link href={item.href} passHref>
+//         <div
+//           className={cn(
+//             "flex items-center py-2 px-3 my-1 rounded-lg cursor-pointer", // Reduced vertical padding and margin
+//             isActive ? "bg-blue-50 text-blue-600" : "hover:bg-gray-50",
+//             isCollapsed && "justify-center" // Center items when collapsed
+//           )}
+//           onClick={onClick}
+//         >
+//           <div className={cn(
+//             "flex items-center justify-center",
+//             isCollapsed ? "w-6 h-6" : "w-5 h-5 mr-2" // Slightly smaller icons
+//           )}>
+//             <Image
+//               src={item.icon}
+//               width={isCollapsed ? 24 : 20}
+//               height={isCollapsed ? 24 : 20}
+//               alt={item.label}
+//               className={isCollapsed ? "font-bold" : ""} // Make icons bolder when collapsed
+//             />
+//           </div>
+//           {!isCollapsed && <span className="font-medium text-sm">{item.label}</span>} {/* Smaller font size */}
+//         </div>
+//       </Link>
+//     </div>
+//   );
+// };
+
+// // Modal component for signing into another workspace
+// interface WorkspaceModalProps {
+//   isOpen: boolean;
+//   onClose: () => void;
+//   onSubmit: (data: { organizationId: string; email: string; password: string }) => void;
+// }
+
+// const WorkspaceModal: React.FC<WorkspaceModalProps> = ({ isOpen, onClose, onSubmit }) => {
+//   const [formData, setFormData] = useState({
+//     organizationId: "",
+//     email: "",
+//     password: ""
+//   });
+
+//   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//     setFormData({
+//       ...formData,
+//       [e.target.name]: e.target.value
+//     });
+//   };
+
+//   const handleSubmit = (e: React.FormEvent) => {
+//     e.preventDefault();
+//     onSubmit(formData);
+//   };
+
+//   if (!isOpen) return null;
+
+//   return (
+//     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+//       <div className="bg-white rounded-lg p-6 w-full max-w-md">
+//         <div className="flex justify-between items-center mb-4">
+//           <h2 className="text-xl font-bold">Sign into workspace</h2>
+//           <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+//             <X size={20} />
+//           </button>
+//         </div>
+//         <form onSubmit={handleSubmit}>
+//           <div className="mb-4">
+//             <label htmlFor="organizationId" className="block text-sm font-medium text-gray-700 mb-1">
+//               Organization ID
+//             </label>
+//             <input
+//               id="organizationId"
+//               name="organizationId"
+//               type="text"
+//               required
+//               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+//               value={formData.organizationId}
+//               onChange={handleChange}
+//             />
+//           </div>
+//           <div className="mb-4">
+//             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+//               Email
+//             </label>
+//             <input
+//               id="email"
+//               name="email"
+//               type="email"
+//               required
+//               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+//               value={formData.email}
+//               onChange={handleChange}
+//             />
+//           </div>
+//           <div className="mb-6">
+//             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+//               Password
+//             </label>
+//             <input
+//               id="password"
+//               name="password"
+//               type="password"
+//               required
+//               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+//               value={formData.password}
+//               onChange={handleChange}
+//             />
+//           </div>
+//           <button
+//             type="submit"
+//             className="w-full py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700"
+//           >
+//             Sign In
+//           </button>
+//         </form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// // Local function to get user info from localStorage
+// const getLocalUserInfo = (): UserInfo => {
+//   // Only execute on client-side
+//   if (typeof window !== 'undefined') {
+//     const storedName = localStorage.getItem('userName');
+//     return { name: storedName || "User" };
+//   }
+//   return { name: "User" };
+// };
+
+// interface SidebarProps {
+//   isCollapsed: boolean;
+//   setIsCollapsed: (collapsed: boolean) => void;
+// }
+
+// const Sidebar: React.FC<SidebarProps> = ({
+//   isCollapsed,
+//   setIsCollapsed,
+// }) => {
+//   const [activeTab, setActiveTab] = useState("dashboard");
+//   const [userInfo, setUserInfo] = useState<UserInfo>({ name: "" });
+//   const [showDropdown, setShowDropdown] = useState(false);
+//   const [showModal, setShowModal] = useState(false);
+//   const [modalOpen, setModalOpen] = useState<boolean>(false);
+//   const [authModalOpen, setAuthModalOpen] = useState(false);
+//   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
+//   const [signInUrl, setSignInUrl] = useState<string>("/auth/signin");
+//   const [signUpUrl, setSignUpUrl] = useState<string>("/auth/signup");
+//   const dropdownRef = useRef<HTMLDivElement>(null);
+//   const pathname = usePathname();
+//   const router = useRouter();
+
+//   // Handle clicks outside of the dropdown
+//   useEffect(() => {
+//     const handleClickOutside = (event: MouseEvent) => {
+//       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+//         setShowDropdown(false);
+//       }
+//     };
+
+//     document.addEventListener("mousedown", handleClickOutside);
+//     return () => {
+//       document.removeEventListener("mousedown", handleClickOutside);
+//     };
+//   }, []);
+
+//   useEffect(() => {
+//     // Try to get user info from cookies first
+//     try {
+//       const cookieInfo = getServerUserInfo();
+//       if (cookieInfo && cookieInfo.name) {
+//         setUserInfo({
+//           name: cookieInfo.name,
+//           // organizationId: cookieInfo.organizationId || undefined
+//         });
+//       } else {
+//         // Fallback to localStorage if cookie info doesn't have name
+//         const localInfo = getLocalUserInfo();
+//         setUserInfo({
+//           name: localInfo.name
+//         });
+//       }
+
+//       // Get workspaces from localStorage if available
+//       const storedWorkspaces = localStorage.getItem('workspaces');
+//       if (storedWorkspaces) {
+//         setWorkspaces(JSON.parse(storedWorkspaces));
+//       }
+//     } catch (error) {
+//       console.log("Error getting user info from cookies, falling back to localStorage");
+//       // Fallback to localStorage
+//       const localInfo = getLocalUserInfo();
+//       setUserInfo({
+//         name: localInfo.name
+//       });
+//     }
+
+//     // Set active tab based on pathname
+//     const path = pathname.split('/')[1];
+//     if (path) {
+//       const matchingItem = [...navItems, ...externalItems].find(
+//         item => item.href.includes(`/${path}`)
+//       );
+//       if (matchingItem) {
+//         setActiveTab(matchingItem.id);
+//         // Also update localStorage for Dashboard to read
+//         localStorage.setItem('activeCategory', matchingItem.id);
+//       }
+//     }
+//   }, [pathname]);
+
+//   const handleItemClick = (item: NavItem) => {
+//     setActiveTab(item.id);
+
+//     // Store the active category in localStorage for dashboard to use
+//     localStorage.setItem('activeCategory', item.id);
+
+//     // Trigger localStorage event for dashboard to detect
+//     window.dispatchEvent(new Event('storage'));
+//   };
+
+//   const toggleDropdown = () => {
+//     setShowDropdown(!showDropdown);
+//   };
+
+//   const handleSignIntoWorkspace = (data: { organizationId: string; email: string; password: string }) => {
+//     // Simulate signing into workspace
+//     const newWorkspace: Workspace = {
+//       id: data.organizationId,
+//       name: data.email.split('@')[0], // Use part of email as name for demo
+//       icon: data.organizationId.substring(0, 2).toUpperCase() // Use first two letters as icon
+//     };
+
+//     const updatedWorkspaces = [...workspaces, newWorkspace];
+//     setWorkspaces(updatedWorkspaces);
+
+//     // Store in localStorage
+//     localStorage.setItem('workspaces', JSON.stringify(updatedWorkspaces));
+
+//     // Close modal
+//     setShowModal(false);
+//   };
+
+//   const handleWorkspaceClick = (workspace: Workspace) => {
+//     // Simulate switching workspace
+//     setUserInfo({
+//       ...userInfo,
+//       name: workspace.name,
+//       organizationId: workspace.id
+//     });
+
+//     // Close dropdown
+//     setShowDropdown(false);
+//   };
+
+//   // Handle unlock button click
+//   const handleUnlockClick = () => {
+//     setModalOpen(true);
+//   };
+
+//   // Generate initials for user's icon
+//   const userInitials = userInfo.name ? userInfo.name.substring(0, 2).toUpperCase() : "US";
+
+//   return (
+//     <div className="relative">
+//       <div
+//         className={cn(
+//           "flex flex-col h-screen bg-white border-r transition-all duration-300 top-0 left-0 fixed",
+//           isCollapsed ? "w-20" : "w-64"
+//         )}
+//         style={{ fontSize: '14px' }} /* Base font size for the sidebar */
+//       >
+//         {/* Logo */}
+//         <div className="p-2 flex items-center justify-center"> {/* Reduced padding */}
+//           <div className="w-7 h-7 bg-emerald-600 rounded-lg flex items-center justify-center"> {/* Smaller logo */}
+//             <Image
+//               src="/icons/icon-main.png"
+//               width={32}
+//               height={32}
+//               alt="icon"
+//             />
+//           </div>
+//           {!isCollapsed && (
+//             <Image
+//               src="/icons/djombi-icon.png"
+//               width={120}
+//               height={32}
+//               alt="icon"
+//               className="ml-2" /* Added margin for spacing */
+//             />
+//           )}
+//         </div>
+
+//         {/* Toggle button */}
+//         <div className="flex justify-center">
+//           <button
+//             onClick={() => setIsCollapsed(!isCollapsed)}
+//             className="p-2 hover:bg-gray-100 rounded-lg items-center" /* Reduced padding */
+//           >
+//             <Menu className="h-4 w-4" /> {/* Smaller icon */}
+//           </button>
+//         </div>
+
+//         {/* Company selector with dropdown */}
+//         <div className="px-3 py-2 relative" ref={dropdownRef}> {/* Reduced padding */}
+//           <div
+//             className={cn(
+//               "flex items-center p-1 border rounded-lg cursor-pointer hover:bg-gray-50", /* Reduced padding */
+//               isCollapsed ? "justify-center" : "justify-between"
+//             )}
+//             onClick={toggleDropdown}
+//           >
+//             <div className="flex items-center">
+//               <div className="w-5 h-5 bg-blue-600 rounded flex items-center justify-center text-white text-xs font-bold"> {/* Smaller user icon */}
+//                 {userInitials}
+//               </div>
+//               {!isCollapsed && <span className="font-medium text-sm ml-2">{userInfo.name}</span>} {/* Added margin, smaller text */}
+//             </div>
+//             {!isCollapsed && (
+//               <ChevronDown size={14} /> /* Smaller icon */
+//             )}
+//           </div>
+
+//           {/* Workspace Dropdown */}
+//           {showDropdown && !isCollapsed && (
+//             <div className="absolute left-3 right-3 mt-1 bg-white border rounded-lg shadow-lg z-10"> {/* Adjusted margins */}
+//               <div className="p-2">
+//                 <p className="text-xs uppercase text-gray-400 pb-1">Workspaces</p> {/* Reduced padding */}
+
+//                 {/* Current workspace */}
+//                 <div className="flex items-center p-1 bg-blue-50 rounded-md mb-1"> {/* Reduced padding */}
+//                   <div className="w-6 h-6 bg-blue-600 rounded-md flex items-center justify-center text-white font-medium mr-2 text-xs"> {/* Smaller, added text size */}
+//                     {userInitials}
+//                   </div>
+//                   <div>
+//                     <p className="font-medium text-sm">{userInfo.name}</p> {/* Smaller text */}
+//                     <p className="text-xs text-gray-500">Current workspace</p>
+//                   </div>
+//                 </div>
+
+//                 {/* Other workspaces */}
+//                 {workspaces.filter(w => w.id !== userInfo.organizationId).map((workspace) => (
+//                   <div
+//                     key={workspace.id}
+//                     className="flex items-center p-1 hover:bg-gray-50 rounded-md cursor-pointer" /* Reduced padding */
+//                     onClick={() => handleWorkspaceClick(workspace)}
+//                   >
+//                     <div className="w-6 h-6 bg-gray-600 rounded-md flex items-center justify-center text-white font-medium mr-2 text-xs"> {/* Smaller, added text size */}
+//                       {workspace.icon}
+//                     </div>
+//                     <div>
+//                       <p className="font-medium text-sm">{workspace.name}</p> {/* Smaller text */}
+//                     </div>
+//                   </div>
+//                 ))}
+
+//                 {/* Add workspace button */}
+//                 <button
+//                   className="w-full mt-1 p-1 bg-gray-100 hover:bg-gray-200 rounded-md text-xs font-medium flex items-center justify-center" /* Reduced margins, padding, text size */
+//                   onClick={() => {
+//                     setShowDropdown(false);
+//                     setShowModal(true);
+//                   }}
+//                 >
+//                   <span>+ Sign into another workspace</span>
+//                 </button>
+//               </div>
+//             </div>
+//           )}
+//         </div>
+
+//         {/* Main Navigation */}
+//         <div className="flex-1 overflow-y-auto px-3 max-h-[calc(100vh-230px)]"> {/* Adjusted padding and max height */}
+//           {/* Dashboard Item (Placed first as requested) */}
+//           <SidebarItem
+//             key={navItems[0].id}
+//             item={navItems[0]}
+//             isCollapsed={isCollapsed}
+//             isActive={activeTab === navItems[0].id}
+//             onClick={() => handleItemClick(navItems[0])}
+//           />
+
+//           {/* Features section */}
+//           {!isCollapsed && (
+//             <div className="text-xs uppercase text-gray-400 mt-2 mb-1 px-2"> {/* Reduced margins */}
+//               FEATURES
+//             </div>
+//           )}
+
+//           {/* Other Menu Items (marketing, advertising, tools) */}
+//           <div className="mb-3"> {/* Reduced margin */}
+//             {navItems.slice(1).map((item) => (
+//               <SidebarItem
+//                 key={item.id}
+//                 item={item}
+//                 isCollapsed={isCollapsed}
+//                 isActive={activeTab === item.id}
+//                 onClick={() => handleItemClick(item)}
+//               />
+//             ))}
+//           </div>
+
+//           {/* Externals Section */}
+//           {!isCollapsed && (
+//             <div className="text-xs uppercase text-gray-400 mt-2 mb-1 px-2"> {/* Reduced margins */}
+//               EXTERNALS
+//             </div>
+//           )}
+
+//           <div className="mb-3"> {/* Reduced margin */}
+//             {externalItems.map((item) => (
+//               <SidebarItem
+//                 key={item.id}
+//                 item={item}
+//                 isCollapsed={isCollapsed}
+//                 isActive={activeTab === item.id}
+//                 onClick={() => handleItemClick(item)}
+//               />
+//             ))}
+//           </div>
+//         </div>
+
+//         {/* Upgrade Banner - Fixed to bottom */}
+//         <div className="mx-3 mb-3 bg-gradient-to-b from-blue-400 to-blue-600 rounded-lg text-white p-3"> {/* Reduced margins and padding */}
+//           <div className="flex justify-center mb-2"> {/* Reduced margin */}
+//             <div className="bg-white/20 rounded-full p-1"> {/* Reduced padding */}
+//               <svg
+//                 width="20"
+//                 height="20"  /* Smaller SVG */
+//                 viewBox="0 0 24 24"
+//                 fill="none"
+//                 xmlns="http://www.w3.org/2000/svg"
+//               >
+//                 <path
+//                   d="M5 3L19 12L5 21V3Z"
+//                   fill="white"
+//                   stroke="white"
+//                   strokeWidth="2"
+//                   strokeLinecap="round"
+//                   strokeLinejoin="round"
+//                 />
+//               </svg>
+//             </div>
+//           </div>
+//           {/* Upgrade section */}
+//           {!isCollapsed && (
+//             <>
+//               <h3 className="text-center font-medium mb-1 text-sm">Upgrade your potential</h3> {/* Smaller text */}
+//               <p className="text-xs text-center mb-2">you're now using Free plan.</p> {/* Smaller text, reduced margin */}
+//               <button
+//                 className="w-full py-1 bg-blue-700 hover:bg-blue-800 rounded-lg font-medium text-center text-white text-xs" /* Reduced padding, smaller text */
+//                 onClick={handleUnlockClick}
+//               >
+//                 UNLOCK NOW !
+//               </button>
+//             </>
+//           )}
+//         </div>
+//       </div>
+
+//       {/* Workspace Sign-in Modal */}
+//       <WorkspaceModal
+//         isOpen={showModal}
+//         onClose={() => setShowModal(false)}
+//         onSubmit={handleSignIntoWorkspace}
+//       />
+
+//       {/* Authentication Modal */}
+//       {/* <AuthModal
+//         isOpen={authModalOpen}
+//         onClose={() => setAuthModalOpen(false)}
+//         signInUrl={signInUrl}
+//         signUpUrl={signUpUrl}
+//       /> */}
+
+//       {/* Awaiting List Modal on Features */}
+//       <AwaitingListModal
+//         isOpen={modalOpen}
+//         onClose={() => setModalOpen(false)}
+//       />
+//     </div>
+//   );
+// };
+
+// export default Sidebar;
 
 
 
