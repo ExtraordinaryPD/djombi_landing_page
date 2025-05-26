@@ -374,24 +374,26 @@ const Sidebar: React.FC<SidebarProps> = ({
         style={{ fontSize: '14px' }} /* Base font size for the sidebar */
       >
         {/* Logo */}
-        <div className="p-2 flex items-center justify-center"> {/* Reduced padding */}
-          <div className="w-7 h-7 bg-emerald-600 rounded-lg flex items-center justify-center"> {/* Smaller logo */}
-            <Image
-              src="/icons/icon-main.png"
-              width={32}
-              height={32}
-              alt="icon"
-            />
-          </div>
-          {!isCollapsed && (
-            <Image
-              src="/icons/djombi-icon.png"
-              width={120}
-              height={32}
-              alt="icon"
-              className="ml-2" /* Added margin for spacing */
-            />
-          )}
+        <div className="p-2 flex items-center justify-center">
+          <Link href="https://djombi.com" className="flex items-center cursor-pointer hover:opacity-80 transition-opacity">
+            <div className="w-7 h-7 bg-emerald-600 rounded-lg flex items-center justify-center">
+              <Image
+                src="/icons/icon-main.png"
+                width={32}
+                height={32}
+                alt="icon"
+              />
+            </div>
+            {!isCollapsed && (
+              <Image
+                src="/icons/djombi-icon.png"
+                width={120}
+                height={32}
+                alt="icon"
+                className="ml-2"
+              />
+            )}
+          </Link>
         </div>
 
         {/* Company selector with dropdown */}
