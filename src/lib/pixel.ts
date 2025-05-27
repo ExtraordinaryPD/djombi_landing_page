@@ -1,5 +1,5 @@
-export const FB_PIXEL_ID = "1144965917433517";
-export const LINKEDIN_PARTNER_ID = "8408633";
+export const FB_PIXEL_ID = process.env.FB_PIXEL_ID
+export const LINKEDIN_PARTNER_ID = process.env.LINKEDIN_PARTNER_ID
 
 declare global {
   interface Window {
