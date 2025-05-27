@@ -4,7 +4,7 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Suspense } from "react";
 import LandingPageFeatureCard from "@/components/LandingPageFeatureCard/LandingPageFeatureCard";
 import { event, LINKEDIN_PARTNER_ID } from "@/lib/pixel";
 import Script from "next/script";
@@ -199,26 +199,49 @@ const exampleData: Tab[] = [
   },
 ];
 
-export default function Home() {
+// Loading component for Suspense fallback
+function LoadingFallback() {
+  return (
+    <div className="flex items-center justify-center p-4">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500"></div>
+    </div>
+  );
+}
+
+// Main content component that uses client-side features
+function HomeContent() {
   const [currentSection, setCurrentSection] = useState(0);
   const [activeTab, setActiveTab] = useState("tools"); // Default to tools tab
   const [features, setFeatures] = useState<Feature[]>([]);
+  const [isClient, setIsClient] = useState(false);
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
+
+  // Ensure we're on the client side
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Initialize refs for each section
   useEffect(() => {
+    if (!isClient) return;
+    
     sectionRefs.current = [
       document.getElementById("landing-section"),
       document.getElementById("tools-section"),
       document.getElementById("footer-section"),
     ];
 
-    // Track landing page view
-    event("ViewContent", {
-      content_name: "Landing Page",
-      content_category: "Marketing Page",
-      content_type: "landing_page_view",
-    });
+    // Track landing page view only on client
+    try {
+      event("ViewContent", {
+        content_name: "Landing Page",
+        content_category: "Marketing Page",
+        content_type: "landing_page_view",
+      });
+    } catch (error) {
+      console.log("Tracking not available:", error);
+    }
+
     // Set up scroll event listener
     const handleScroll = () => {
       const scrollPosition = window.scrollY + window.innerHeight / 2;
@@ -232,12 +255,16 @@ export default function Home() {
           if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
             setCurrentSection(index);
             // Track section views
-            const sectionNames = ["hero", "features", "footer"];
-            event("ViewContent", {
-              content_name: `Section - ${sectionNames[index]}`,
-              content_category: "Page Section",
-              content_type: "section_view",
-            });
+            try {
+              const sectionNames = ["hero", "features", "footer"];
+              event("ViewContent", {
+                content_name: `Section - ${sectionNames[index]}`,
+                content_category: "Page Section",
+                content_type: "section_view",
+              });
+            } catch (error) {
+              console.log("Section tracking not available:", error);
+            }
           }
         }
       });
@@ -245,7 +272,7 @@ export default function Home() {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isClient]);
 
   // Update features when active tab changes
   useEffect(() => {
@@ -299,24 +326,37 @@ export default function Home() {
     setFeatures(updatedFeatures);
   };
 
+  const handleSocialClick = (platform: string) => {
+    try {
+      event("Lead", {
+        content_name: `Social Media - ${platform}`,
+        lead_event_source: "social_footer",
+      });
+    } catch (error) {
+      console.log("Social tracking not available:", error);
+    }
+  };
+
   return (
     <div className="flex flex-col font-[family-name:var(--font-geist-sans)]">
       {/* Navigation dots for section indicators */}
-      <div className="fixed right-10 top-1/2 transform -translate-y-1/2 z-50">
-        <div className="flex flex-col gap-4">
-          {[0, 1, 2].map((index) => (
-            <button
-              key={index}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                currentSection === index
-                  ? "bg-emerald-500 scale-125"
-                  : "bg-gray-300 hover:bg-gray-400"
-              }`}
-              onClick={() => scrollToSection(index)}
-            />
-          ))}
+      {isClient && (
+        <div className="fixed right-10 top-1/2 transform -translate-y-1/2 z-50">
+          <div className="flex flex-col gap-4">
+            {[0, 1, 2].map((index) => (
+              <button
+                key={index}
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  currentSection === index
+                    ? "bg-emerald-500 scale-125"
+                    : "bg-gray-300 hover:bg-gray-400"
+                }`}
+                onClick={() => scrollToSection(index)}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* First section - Landing image */}
       <section
@@ -341,12 +381,6 @@ export default function Home() {
           <h2 className="text-2xl md:text-5xl text-white max-w-2xl mt-4">
             The everything app for work
           </h2>
-          {/* <Button 
-            className="bg-emerald-500 hover:bg-emerald-600 text-white mt-8 px-8 py-6 text-lg"
-            onClick={() => scrollToSection(1)}
-          >
-            Discover More
-          </Button> */}
         </div>
       </section>
 
@@ -543,12 +577,7 @@ export default function Home() {
               <a
                 href="#"
                 className="text-gray-400 hover:text-white transition"
-                onClick={() =>
-                  event("Lead", {
-                    content_name: "Social Media - Facebook",
-                    lead_event_source: "social_footer",
-                  })
-                }
+                onClick={() => handleSocialClick("Facebook")}
               >
                 <span className="sr-only">Facebook</span>
                 <svg
@@ -593,12 +622,7 @@ export default function Home() {
               <a
                 href="#"
                 className="text-gray-400 hover:text-white transition"
-                onClick={() =>
-                  event("Lead", {
-                    content_name: "Social Media - LinkedIn",
-                    lead_event_source: "social_footer",
-                  })
-                }
+                onClick={() => handleSocialClick("LinkedIn")}
               >
                 <span className="sr-only">LinkedIn</span>
                 <svg
@@ -613,52 +637,65 @@ export default function Home() {
             </div>
           </div>
         </div>
-        {/* LinkedIn Pixel Scripts - Added to Footer Section */}
-        <Script
-          id="linkedin-pixel-footer"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              _linkedin_partner_id = "${LINKEDIN_PARTNER_ID}";
-              window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
-              window._linkedin_data_partner_ids.push(_linkedin_partner_id);
-            `,
-          }}
-        />
+        
+        {/* LinkedIn Pixel Scripts - Only load on client */}
+        {isClient && (
+          <>
+            <Script
+              id="linkedin-pixel-footer"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  _linkedin_partner_id = "${LINKEDIN_PARTNER_ID}";
+                  window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
+                  window._linkedin_data_partner_ids.push(_linkedin_partner_id);
+                `,
+              }}
+            />
 
-        <Script
-          id="linkedin-insight-footer"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function(l) {
-                if (!l){
-                  window.lintrk = function(a,b){window.lintrk.q.push([a,b])};
-                  window.lintrk.q=[]
-                }
-                var s = document.getElementsByTagName("script")[0];
-                var b = document.createElement("script");
-                b.type = "text/javascript";
-                b.async = true;
-                b.src = "https://snap.licdn.com/li.lms-analytics/insight.min.js";
-                s.parentNode.insertBefore(b, s);
-              })(window.lintrk);
-            `,
-          }}
-        />
+            <Script
+              id="linkedin-insight-footer"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  (function(l) {
+                    if (!l){
+                      window.lintrk = function(a,b){window.lintrk.q.push([a,b])};
+                      window.lintrk.q=[]
+                    }
+                    var s = document.getElementsByTagName("script")[0];
+                    var b = document.createElement("script");
+                    b.type = "text/javascript";
+                    b.async = true;
+                    b.src = "https://snap.licdn.com/li.lms-analytics/insight.min.js";
+                    s.parentNode.insertBefore(b, s);
+                  })(window.lintrk);
+                `,
+              }}
+            />
 
-        {/* LinkedIn Pixel Noscript fallback */}
-        <noscript>
-          <img
-            height="1"
-            width="1"
-            style={{ display: "none" }}
-            alt=""
-            src={`https://px.ads.linkedin.com/collect/?pid=${LINKEDIN_PARTNER_ID}&fmt=gif`}
-          />
-        </noscript>
+            {/* LinkedIn Pixel Noscript fallback */}
+            <noscript>
+              <img
+                height="1"
+                width="1"
+                style={{ display: "none" }}
+                alt=""
+                src={`https://px.ads.linkedin.com/collect/?pid=${LINKEDIN_PARTNER_ID}&fmt=gif`}
+              />
+            </noscript>
+          </>
+        )}
       </section>
     </div>
   );
 }
 
+// Main component with Suspense boundary
+export default function Home() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <HomeContent />
+    </Suspense>
+  );
+}

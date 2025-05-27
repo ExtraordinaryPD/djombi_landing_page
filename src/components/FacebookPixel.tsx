@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { pageview, FB_PIXEL_ID } from '@/lib/pixel';
 
-export default function FacebookPixel() {
+// Separate component that uses search params
+function FacebookPixelContent() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -16,14 +17,30 @@ export default function FacebookPixel() {
         .then((ReactPixel) => {
           ReactPixel.init(FB_PIXEL_ID);
           ReactPixel.pageView();
+        })
+        .catch((error) => {
+          console.log('Facebook Pixel failed to load:', error);
         });
     }
   }, []);
 
   useEffect(() => {
     // Track page changes
-    pageview();
+    try {
+      pageview();
+    } catch (error) {
+      console.log('Pageview tracking failed:', error);
+    }
   }, [pathname, searchParams]);
 
   return null;
+}
+
+// Main component with Suspense boundary
+export default function FacebookPixel() {
+  return (
+    <Suspense fallback={null}>
+      <FacebookPixelContent />
+    </Suspense>
+  );
 }
