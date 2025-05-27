@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Bell, MessageSquare, Sun, Moon, User, Settings, LogOut, ChevronDown, Menu, X } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
