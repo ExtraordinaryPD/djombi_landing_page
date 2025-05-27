@@ -9,6 +9,7 @@ import { HotjarInitializer } from "@/components/HotjarInitializer";
 import Script from "next/script";
 import FacebookPixel from "@/components/FacebookPixel";
 import { FB_PIXEL_ID, LINKEDIN_PARTNER_ID } from "@/lib/pixel";
+import SearchParamsProvider from "@/components/SearchParamsWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -103,8 +104,10 @@ export default function RootLayout({
 
         <FacebookPixel />
         <QueryProvider>
-          <HotjarInitializer />
-          {children}
+          <SearchParamsProvider>
+            <HotjarInitializer />
+            {children}
+          </SearchParamsProvider>
           <Toaster richColors />
         </QueryProvider>
       </body>
