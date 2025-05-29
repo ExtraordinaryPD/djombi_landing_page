@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { getUserInfo as getServerUserInfo } from "@/lib/utils/cookies";
@@ -7,12 +7,14 @@ import { UnlockedFeatures } from "@/components/Dashboard/UnlockedFeatures";
 import { UnlockLevelCard } from "@/components/Dashboard/UnlockLevelCard";
 import { EmailSection } from "@/components/Dashboard/EmailSection";
 import { StatisticsSection } from "@/components/Dashboard/StatisticsSection";
-import { AuthModal } from "@/components/Dashboard/AuthModal"; // Updated import for new modal
+import { AuthModal } from "@/components/Dashboard/AuthModal";
 import { AwaitingListModal } from "@/components/UserTestSidebar/AwaitingListModal";
+import { event } from "@/lib/pixel"; // Import pixel tracking
 
 // Define proper TypeScript interfaces
 interface UserInfo {
   name: string;
+  email?: string;
 }
 
 interface Feature {
@@ -75,12 +77,17 @@ const getLocalUserInfo = (): UserInfo => {
   // Only execute on client-side
   if (typeof window !== 'undefined') {
     const storedName = localStorage.getItem('userName');
-    return { name: storedName || "User" };
+    const storedEmail = localStorage.getItem('userEmail');
+    return {
+      name: storedName || "User",
+      email: storedEmail || undefined
+    };
   }
   return { name: "User" };
 };
 
-const Dashboard: React.FC = () => {
+// Dashboard Component wrapped in Suspense
+const DashboardContent: React.FC = () => {
   const [userInfo, setUserInfo] = useState<UserInfo>({ name: "" });
   const [activeTab, setActiveTab] = useState<string>("dashboard");
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -96,18 +103,39 @@ const Dashboard: React.FC = () => {
     setGreeting(getTimeBasedGreeting());
     setQuote(getDailyQuote());
 
+    // Track dashboard page view with custom parameters
+    event('ViewContent', {
+      content_name: 'Dashboard',
+      content_category: 'User Dashboard',
+      content_type: 'dashboard_view'
+    });
+
     // Try to get user info from cookies first
     try {
       const cookieInfo = getServerUserInfo();
       if (cookieInfo && cookieInfo.name) {
         setUserInfo({
-          name: cookieInfo.name
+          name: cookieInfo.name,
+          email: cookieInfo.email!
+        });
+        
+        // Track logged in user dashboard view
+        event('Lead', {
+          content_name: 'Dashboard Access',
+          status: 'logged_in_user'
         });
       } else {
         // Fallback to localStorage if cookie info doesn't have name
         const localInfo = getLocalUserInfo();
         setUserInfo({
-          name: localInfo.name
+          name: localInfo.name,
+          email: localInfo.email
+        });
+        
+        // Track guest user dashboard view
+        event('Lead', {
+          content_name: 'Dashboard Access',
+          status: 'guest_user'
         });
       }
     } catch (error) {
@@ -115,7 +143,8 @@ const Dashboard: React.FC = () => {
       // Fallback to localStorage
       const localInfo = getLocalUserInfo();
       setUserInfo({
-        name: localInfo.name
+        name: localInfo.name,
+        email: localInfo.email
       });
     }
 
@@ -123,6 +152,12 @@ const Dashboard: React.FC = () => {
     const savedCategory = localStorage.getItem('activeCategory');
     if (savedCategory) {
       setActiveTab(savedCategory);
+      
+      // Track category selection
+      event('Search', {
+        content_category: savedCategory,
+        search_string: savedCategory
+      });
     }
 
     // Update greeting based on time every minute
@@ -139,6 +174,12 @@ const Dashboard: React.FC = () => {
       const savedCategory = localStorage.getItem('activeCategory');
       if (savedCategory) {
         setActiveTab(savedCategory);
+        
+        // Track category change
+        event('Search', {
+          content_category: savedCategory,
+          search_string: savedCategory
+        });
       }
     };
 
@@ -152,13 +193,30 @@ const Dashboard: React.FC = () => {
 
   // Handle feature card clicks - UPDATED to show auth modal for ALL cards
   const handleFeatureClick = (link: string, isActive: boolean) => {
+    // Track feature interaction
+    const featureName = link.split('/').pop() || 'unknown_feature';
+    
+    event('ViewContent', {
+      content_name: featureName,
+      content_category: 'Feature Click',
+      content_type: 'feature_interaction',
+      value: isActive ? 1 : 0,
+      custom_parameter_1: isActive ? 'active_feature' : 'inactive_feature'
+    });
+
     // Show authentication modal for all feature clicks
     setModalOpen(true);
 
+    // Track modal opening
+    event('Lead', {
+      content_name: 'Authentication Modal',
+      content_category: 'User Engagement',
+      lead_event_source: featureName
+    });
+
     // You could also set custom URLs based on the feature if needed
-    // Example: set different URLs based on the feature or its active status
-    setSignInUrl("/auth/signin");
-    setSignUpUrl("/auth/signup");
+    setSignInUrl("https://djombi.tech/auth/login");
+    setSignUpUrl("https://djombi.tech/auth/signup");
   };
 
   // Get features for the active tab with required state
@@ -209,15 +267,9 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="p-6 min-h-screen bg-white overflow-hidden overflow-y-auto">
-      {/* App Title with Join Awaiting List Button */}
+      {/* App Title */}
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold text-gray-900">The everything app for work !</h1>
-        {/* <button
-          onClick={() => setAwaitingListModalOpen(true)}
-          className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 text-sm sm:text-base transition-colors"
-        >
-          Join Awaiting List
-        </button> */}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -268,10 +320,17 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Authentication Modal - Replaces the FeatureUnavailableModal */}
+      {/* Authentication Modal */}
       <AuthModal
         isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
+        onClose={() => {
+          setModalOpen(false);
+          // Track modal close
+          event('Lead', {
+            content_name: 'Authentication Modal Closed',
+            content_category: 'User Engagement'
+          });
+        }}
         signInUrl="https://djombi.tech/auth/login"
         signUpUrl="https://djombi.tech/auth/signup"
       />
@@ -279,9 +338,30 @@ const Dashboard: React.FC = () => {
       {/* Awaiting List Modal */}
       <AwaitingListModal
         isOpen={awaitingListModalOpen}
-        onClose={() => setAwaitingListModalOpen(false)}
+        onClose={() => {
+          setAwaitingListModalOpen(false);
+          // Track modal close
+          event('Lead', {
+            content_name: 'Awaiting List Modal Closed',
+            content_category: 'User Engagement'
+          });
+        }}
       />
     </div>
+  );
+};
+
+// Main Dashboard component with Suspense wrapper
+const Dashboard: React.FC = () => {
+  return (
+    <Suspense fallback={<div className="p-6 min-h-screen bg-white flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500 mx-auto mb-4"></div>
+        <p className="text-gray-600">Loading dashboard...</p>
+      </div>
+    </div>}>
+      <DashboardContent />
+    </Suspense>
   );
 };
 
