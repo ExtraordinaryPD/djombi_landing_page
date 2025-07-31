@@ -37,21 +37,21 @@ const exampleData: Tab[] = [
         subtitle: "Boost Connections, Drive Sales!",
         imageUrl: "/icons/crm.png",
         link: "/",
-        isActive: false,
-      },
-      {
-        id: "social-listening",
-        title: "Social Listening",
-        subtitle: "Boost Connections, Drive Sales!",
-        imageUrl: "/icons/social.png",
-        link: "/",
-        isActive: false,
+        isActive: true,
       },
       {
         id: "post-publisher",
         title: "Post Publisher",
         subtitle: "Boost Connections, Drive Sales!",
         imageUrl: "/icons/post-publisher.png",
+        link: "/",
+        isActive: true,
+      },
+      {
+        id: "social-listening",
+        title: "Social Listening",
+        subtitle: "Boost Connections, Drive Sales!",
+        imageUrl: "/icons/social.png",
         link: "/",
         isActive: false,
       },
@@ -86,18 +86,34 @@ const exampleData: Tab[] = [
         isActive: true,
       },
       {
-        id: "website-builder",
-        title: "Website Builder",
+        id: "invoice",
+        title: "Invoice",
         subtitle: "Boost Connections, Drive Sales!",
-        imageUrl: "/icons/website-builder.png",
-        link: "/",
-        isActive: false,
+        imageUrl: "/icons/invoice.png",
+        link: "/dashboard/invoices",
+        isActive: true
+      },
+      {
+        id: "note",
+        title: "Note",
+        subtitle: "Boost Connections, Drive Sales!",
+        imageUrl: "/icons/note.png",
+        link: "/dashboard/notes",
+        isActive: true
       },
       {
         id: "internal-message",
         title: "Internal Message",
         subtitle: "Boost Connections, Drive Sales!",
         imageUrl: "/icons/internal-message.png",
+        link: "/",
+        isActive: true,
+      },
+      {
+        id: "website-builder",
+        title: "Website Builder",
+        subtitle: "Boost Connections, Drive Sales!",
+        imageUrl: "/icons/website-builder.png",
         link: "/",
         isActive: false,
       },
@@ -153,7 +169,7 @@ const exampleData: Tab[] = [
         subtitle: "Boost Connections, Drive Sales!",
         imageUrl: "/icons/mass-mailing.png",
         link: "/",
-        isActive: false,
+        isActive: true,
       },
       {
         id: "Meta",
@@ -361,7 +377,7 @@ function HomeContent() {
       {/* First section - Landing image */}
       <section
         id="landing-section"
-        className="min-h-screen flex items-center justify-center relative w-full"
+        className="min-h-[900px] flex items-center justify-center relative w-full"
       >
         <Image
           src="/assets/landing.png"
@@ -374,9 +390,9 @@ function HomeContent() {
           <Image
             src="/icons/djombiapplogo.png"
             width={700}
-            height={50}
+            height={20}
             alt="Djombi"
-            className="mb-6"
+            className="mb-3"
           />
           <h2 className="text-2xl md:text-5xl text-white max-w-2xl mt-4">
             The everything app for work
@@ -428,11 +444,20 @@ function HomeContent() {
             ))}
           </div>
 
-          <Link href="/dashboard/awaitinglist">
-            <Button className="bg-emerald-500 hover:bg-emerald-600 text-white mt-12 px-8 py-6 text-lg">
-              Try Dashboard with No Sign Up
-            </Button>
-          </Link>
+            {/*Buttons Actions  */}
+          <div className="flex mt-12 space-x-4 items-center justify-center">
+            <Link href="/dashboard/awaitinglist">
+              <Button className="bg-emerald-500 hover:bg-emerald-600 text-white mt-12 px-8 py-6 text-lg">
+                Try Demo Now
+              </Button>
+            </Link>
+
+              <Link href="https://djombi.tech/auth/login" target="_blank" rel="noopener noreferrer">
+              <Button className="bg-white hover:bg-emerald-600 hover:text-white mt-12 px-8 py-6 text-lg text-emerald-500 border border-emerald-500">
+                Djombi App
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -688,6 +713,8 @@ function HomeContent() {
         )}
       </section>
     </div>
+
+    
   );
 }
 

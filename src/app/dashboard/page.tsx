@@ -390,16 +390,8 @@ const exampleData: Tab[] = [
         title: "CRM",
         subtitle: "Boost Connections, Drive Sales!",
         imageUrl: "/icons/crm.png",
-        link: "/dashboard/intern-message",
-        isActive: false
-      },
-      {
-        id: "social-listening",
-        title: "Social Listening",
-        subtitle: "Boost Connections, Drive Sales!",
-        imageUrl: "/icons/social.png",
-        link: "/dashboard/social-listening",
-        isActive: false
+        link: "/dashboard/crm",
+        isActive: true
       },
       {
         id: "post-publisher",
@@ -407,6 +399,14 @@ const exampleData: Tab[] = [
         subtitle: "Boost Connections, Drive Sales!",
         imageUrl: "/icons/post-publisher.png",
         link: "/dashboard/post-publisher",
+        isActive: true
+      },
+      {
+        id: "social-listening",
+        title: "Social Listening",
+        subtitle: "Boost Connections, Drive Sales!",
+        imageUrl: "/icons/social.png",
+        link: "/dashboard/social-listening",
         isActive: false
       },
       {
@@ -440,6 +440,30 @@ const exampleData: Tab[] = [
         isActive: true
       },
       {
+        id: "invoice",
+        title: "Invoice",
+        subtitle: "Boost Connections, Drive Sales!",
+        imageUrl: "/icons/invoice.png",
+        link: "/dashboard/invoices",
+        isActive: true
+      },
+       {
+        id: "internal-message",
+        title: "Internal Message",
+        subtitle: "Boost Connections, Drive Sales!",
+        imageUrl: "/icons/internal-message.png",
+        link: "/dashboard/messaging",
+        isActive: true
+      },
+      {
+        id: "e-sign",
+        title: "E-Sign",
+        subtitle: "Boost Connections, Drive Sales!",
+        imageUrl: "/icons/e-sign.png",
+        link: "/dashboard/e-sign",
+        isActive: false
+      },
+      {
         id: "website-builder",
         title: "Website Builder",
         subtitle: "Boost Connections, Drive Sales!",
@@ -448,27 +472,11 @@ const exampleData: Tab[] = [
         isActive: false
       },
       {
-        id: "internal-message",
-        title: "Internal Message",
-        subtitle: "Boost Connections, Drive Sales!",
-        imageUrl: "/icons/internal-message.png",
-        link: "/dashboard/messaging",
-        isActive: false
-      },
-      {
         id: "online-meeting",
         title: "Online Meeting",
         subtitle: "Boost Connections, Drive Sales!",
         imageUrl: "/icons/online-meeting.png",
         link: "/dashboard/online-message",
-        isActive: false
-      },
-      {
-        id: "e-sign",
-        title: "E-Sign",
-        subtitle: "Boost Connections, Drive Sales!",
-        imageUrl: "/icons/e-sign.png",
-        link: "/dashboard/e-sign",
         isActive: false
       },
       {
@@ -498,7 +506,7 @@ const exampleData: Tab[] = [
         title: "SMS",
         subtitle: "Boost Connections, Drive Sales!",
         imageUrl: "/icons/sms.png",
-        link: "/dashboard/google-ads",
+        link: "/dashboard/sms",
         isActive: true
       },
       {
