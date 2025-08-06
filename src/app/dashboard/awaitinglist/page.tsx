@@ -234,11 +234,10 @@ const Dashboard: React.FC = () => {
       "dashboard-overview": activeTab === "dashboard",
       "website-builder": false,
       "mass-mailing": ["dashboard", "advertising"].includes(activeTab),
-      "intern-messages": true,
+      "internal-message": ["dashboard", "tools"].includes(activeTab),
       "post-publisher": activeTab === "marketing",
-      "invoice": activeTab === "tools",
-      "note": activeTab === "tools",
-      "internal-message": activeTab === "tools",
+      "invoice": ["dashboard", "tools"].includes(activeTab),
+      "note": ["dashboard", "tools"].includes(activeTab),
       "analytics": false,
       "facebook-ads": false,
       "linkedin-ads": false,
@@ -258,7 +257,7 @@ const Dashboard: React.FC = () => {
         // Find the professional email feature
         ...exampleData.flatMap((tab) =>
           tab.features.filter((feature) =>
-            ["professional-mail", "task-manager", "google-ads"].includes(
+            ["professional-mail", "task-manager", "invoice", "note", "internal-message", "website-builder", "online-meeting", "e-sign", "image-editor" ].includes(
               feature.id
             )
           )
